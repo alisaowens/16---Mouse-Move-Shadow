@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mouse Shadow</title>
+</head>
+<body>
+
+  <div class="hero">
+    <h1 contenteditable>Move the mouse to animate the text shadow. You can also edit this text!</h1>
+  </div>
+
+  <style>
+  html {
+    color: black;
+    font-family: sans-serif;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+  }
+
+  h1 {
+    text-shadow: 0px 0px 0 rgba(0,0,0,1);
+    font-size: 50px;
+    text-align: center; 
+  }
+  </style>
+
+<script>
+  const hero = document.querySelector('.hero'); 
+  const text = hero.querySelector('h1'); 
+  const walk = 100; // the range of the shadow is 100px
+
+  function shadow(e) {
+    const { offsetWidth: width, offsetHeight: height } = hero; // destructuring to set variables width and height equal to hero.offsetWidth and hero.offsetHeight
+    let { offsetX: x, offsetY: y } = e; // destructuring to set variables x and y equal to e.offsetX and e.offsetY
+    
+    if(this !== e.target) { // this is always the hero, but e.target can be the hero or its children 
+      x = x + e.target.offsetLeft; // normalize x and y to be measured from the upper left of the screen regardless of the e.target
+      y = y + e.target.offsetTop; 
+    }
+
+    const xWalk = (x / width * walk) - (walk / 2); // set the width of the shadow based on mouse position from -50px to 50px
+    const yWalk = (y / height * walk) - (walk / 2);
+
+    text.style.textShadow = `
+      ${xWalk}px ${yWalk}px 0 rgba(255, 0, 255, 0.7), 
+      ${xWalk * -1}px ${yWalk}px 0 rgba(0, 255, 255, 0.7),
+      ${yWalk}px ${xWalk * -1}px 0 rgba(0, 255, 0, 0.7),
+      ${yWalk * -1}px ${xWalk}px 0 rgba(0, 0, 255, 0.7)
+    `; 
+  }
+
+  hero.addEventListener('mousemove', shadow); 
+
+</script>
+</body>
+</html>
